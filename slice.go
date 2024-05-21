@@ -9,3 +9,22 @@ func (s Slice[M]) Copy() Slice[M] {
 	copy(newS, s.internal)
 	return Slice[M]{newS}
 }
+
+func (s *Slice[M]) Delete(index int) {
+	length := len(s.internal)
+
+	if index == 0 {
+		s.internal = s.internal[1:]
+		return
+	}
+
+	if index == length-1 {
+		s.internal = s.internal[:length-1]
+		return
+	}
+
+	if index > 0 && index < length {
+		s.internal = append(s.internal[:index], s.internal[index+1:]...)
+		return
+	}
+}
