@@ -38,3 +38,13 @@ func TestDelete(t *testing.T) {
 	list.Delete(1)
 	require.Equalf(t, list.internal, []int{2, 4}, "delete at index")
 }
+
+func TestGetLength(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+	require.Equalf(t, list.GetLength(), 5, "get length of slice")
+}
+
+func TestGetRaw(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+	require.Equalf(t, list.GetRaw(), []int{1, 2, 3, 4, 5}, "get raw array of slice")
+}

@@ -4,6 +4,14 @@ type Slice[M any] struct {
 	internal []M
 }
 
+func (s Slice[M]) GetLength() int {
+	return len(s.internal)
+}
+
+func (s Slice[M]) GetRaw() []M {
+	return s.internal
+}
+
 func (s Slice[M]) Copy() Slice[M] {
 	newS := make([]M, len(s.internal))
 	copy(newS, s.internal)
