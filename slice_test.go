@@ -48,3 +48,22 @@ func TestGetRaw(t *testing.T) {
 	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
 	require.Equalf(t, list.GetRaw(), []int{1, 2, 3, 4, 5}, "get raw array of slice")
 }
+
+func TestSoftDelete(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.SoftDelete(-1)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5}, "delete out of range from left")
+
+	list.SoftDelete(5)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5}, "delete out of range from right")
+
+	list.SoftDelete(len(list.internal) - 1)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 0}, "delete at last element index")
+
+	list.SoftDelete(0)
+	require.Equalf(t, list.internal, []int{2, 3, 4, 0, 0}, "delete at index 0")
+
+	list.SoftDelete(1)
+	require.Equalf(t, list.internal, []int{2, 4, 0, 0, 0}, "delete at index")
+}

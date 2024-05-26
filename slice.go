@@ -36,3 +36,18 @@ func (s *Slice[M]) Delete(index int) {
 		return
 	}
 }
+
+func (s *Slice[M]) SoftDelete(index int) {
+	length := len(s.internal)
+
+	if index < 0 || index >= length {
+		return
+	}
+
+	if index >= 0 && index < length-1 {
+		copy(s.internal[index:], s.internal[index+1:])
+	}
+
+	var defaultValue M
+	s.internal[length-1] = defaultValue
+}
