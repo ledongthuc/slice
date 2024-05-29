@@ -67,3 +67,16 @@ func TestSoftDelete(t *testing.T) {
 	list.SoftDelete(1)
 	require.Equalf(t, list.internal, []int{2, 4, 0, 0, 0}, "delete at index")
 }
+
+func TestCut(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.Cut(-1, 0)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5}, "cut out of range from left")
+
+	list.Cut(4, 6)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5}, "cut out of range from right")
+
+	list.Cut(1, 4)
+	require.Equalf(t, list.internal, []int{1, 5}, "cut from valid range")
+}

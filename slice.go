@@ -51,3 +51,26 @@ func (s *Slice[M]) SoftDelete(index int) {
 	var defaultValue M
 	s.internal[length-1] = defaultValue
 }
+
+func (s *Slice[M]) Cut(start int, end int) {
+	start_index := max(0, start)
+	end_index := min(len(s.internal)-1, max(start_index, end))
+
+	s.internal = append(s.internal[:start_index], s.internal[end_index:]...)
+}
+
+func max(a int, b int) int {
+	if a > b {
+		return a
+	}
+
+	return b
+}
+
+func min(a int, b int) int {
+	if a < b {
+		return a
+	}
+
+	return b
+}
