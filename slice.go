@@ -52,6 +52,26 @@ func (s *Slice[M]) SoftDelete(index int) {
 	s.internal[length-1] = defaultValue
 }
 
+func (s *Slice[M]) CutGC(start int, end int) {
+	length := len(s.internal)
+	start_index := max(0, start)
+	end_index := min(length-1, max(start_index, end))
+	copy(s.internal[start_index:], s.internal[end_index:])
+
+	var default_value M
+	has_deleted := false
+	new_length := length - end_index + start_index
+
+	for i := new_length; i < length; i++ {
+		has_deleted = true
+		s.internal[i] = default_value
+	}
+
+	if has_deleted {
+		s.internal = s.internal[:new_length]
+	}
+}
+
 func (s *Slice[M]) Cut(start int, end int) {
 	start_index := max(0, start)
 	end_index := min(len(s.internal)-1, max(start_index, end))

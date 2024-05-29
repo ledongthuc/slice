@@ -81,6 +81,19 @@ func TestCut(t *testing.T) {
 	require.Equalf(t, list.internal, []int{1, 5}, "cut from valid range")
 }
 
+func TestCutGC(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.Cut(-1, 0)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5}, "cut out of range from left")
+
+	list.Cut(4, 6)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5}, "cut out of range from right")
+
+	list.Cut(1, 4)
+	require.Equalf(t, list.internal, []int{1, 5}, "cut from valid range")
+}
+
 func TestAppend(t *testing.T) {
 	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
 	dest_list := Slice[int]{[]int{6, 7, 8}}
