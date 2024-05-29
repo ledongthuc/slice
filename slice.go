@@ -37,7 +37,7 @@ func (s *Slice[M]) Delete(index int) {
 	}
 }
 
-func (s *Slice[M]) SoftDelete(index int) {
+func (s *Slice[M]) DeleteGC(index int) {
 	length := len(s.internal)
 
 	if index < 0 || index >= length {
@@ -50,6 +50,7 @@ func (s *Slice[M]) SoftDelete(index int) {
 
 	var defaultValue M
 	s.internal[length-1] = defaultValue
+	s.internal = s.internal[:length-1]
 }
 
 func (s *Slice[M]) CutGC(start int, end int) {
