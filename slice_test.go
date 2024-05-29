@@ -80,3 +80,11 @@ func TestCut(t *testing.T) {
 	list.Cut(1, 4)
 	require.Equalf(t, list.internal, []int{1, 5}, "cut from valid range")
 }
+
+func TestAppend(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+	dest_list := Slice[int]{[]int{6, 7, 8}}
+
+	list.Append(dest_list)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 6, 7, 8}, "append dest_list")
+}

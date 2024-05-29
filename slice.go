@@ -59,6 +59,10 @@ func (s *Slice[M]) Cut(start int, end int) {
 	s.internal = append(s.internal[:start_index], s.internal[end_index:]...)
 }
 
+func (s *Slice[M]) Append(d Slice[M]) {
+	s.internal = append(s.internal, d.internal...)
+}
+
 func max(a int, b int) int {
 	if a > b {
 		return a
