@@ -109,3 +109,11 @@ func TestPop(t *testing.T) {
 	require.Equalf(t, list.internal, []int{1, 2, 3, 4}, "pop list")
 	require.Equalf(t, val, 5, "pop value")
 }
+
+func TestShift(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	val := list.Shift()
+	require.Equalf(t, list.internal, []int{2, 3, 4, 5}, "shift list")
+	require.Equalf(t, val, 1, "shift value")
+}

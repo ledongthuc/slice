@@ -91,6 +91,13 @@ func (s *Slice[M]) Pop() M {
 	return x
 }
 
+func (s *Slice[M]) Shift() M {
+	x := s.internal[0]
+	s.DeleteGC(0)
+
+	return x
+}
+
 func max(a int, b int) int {
 	if a > b {
 		return a
