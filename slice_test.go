@@ -117,3 +117,13 @@ func TestShift(t *testing.T) {
 	require.Equalf(t, list.internal, []int{2, 3, 4, 5}, "shift list")
 	require.Equalf(t, val, 1, "shift value")
 }
+
+func TestPush(t *testing.T) {
+	list := Slice[int]{[]int{1}}
+
+	list.Push(2)
+	require.Equalf(t, list.internal, []int{1, 2}, "push 2")
+
+	list.Push(3)
+	require.Equalf(t, list.internal, []int{1, 2, 3}, "push 3")
+}

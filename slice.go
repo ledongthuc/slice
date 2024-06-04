@@ -98,6 +98,10 @@ func (s *Slice[M]) Shift() M {
 	return x
 }
 
+func (s *Slice[M]) Push(element M) {
+	s.internal = append(s.internal, element)
+}
+
 func max(a int, b int) int {
 	if a > b {
 		return a
