@@ -84,6 +84,13 @@ func (s *Slice[M]) Append(d Slice[M]) {
 	s.internal = append(s.internal, d.internal...)
 }
 
+func (s *Slice[M]) Pop() M {
+	x := s.internal[len(s.internal)-1]
+	s.DeleteGC(s.GetLength() - 1)
+
+	return x
+}
+
 func max(a int, b int) int {
 	if a > b {
 		return a

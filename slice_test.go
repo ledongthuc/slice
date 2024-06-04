@@ -101,3 +101,11 @@ func TestAppend(t *testing.T) {
 	list.Append(dest_list)
 	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 6, 7, 8}, "append dest_list")
 }
+
+func TestPop(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	val := list.Pop()
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4}, "pop list")
+	require.Equalf(t, val, 5, "pop value")
+}
