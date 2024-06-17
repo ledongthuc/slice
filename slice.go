@@ -53,6 +53,28 @@ func (s *Slice[M]) DeleteGC(index int) {
 	s.internal = s.internal[:length-1]
 }
 
+func (s *Slice[M]) DeleteUnordered(index int) {
+	length := len(s.internal)
+
+	if index < 0 || index >= length {
+		return
+	}
+
+	s.internal[index] = s.internal[length-1]
+	s.Delete(length - 1)
+}
+
+func (s *Slice[M]) DeleteUnorderedClean(index int) {
+	length := len(s.internal)
+
+	if index < 0 || index >= length {
+		return
+	}
+
+	s.internal[index] = s.internal[length-1]
+	s.DeleteGC(length - 1)
+}
+
 func (s *Slice[M]) CutGC(start int, end int) {
 	length := len(s.internal)
 	start_index := max(0, start)
