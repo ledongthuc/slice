@@ -206,3 +206,10 @@ func TestInsert(t *testing.T) {
 	list.Insert(6, 2)
 	require.Equalf(t, list.internal, []int{1, 2, 6, 3, 4, 5}, "insert 2 at 4")
 }
+
+func TestExtend(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.Extend(2)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 0, 0}, "extend 2 elements")
+}

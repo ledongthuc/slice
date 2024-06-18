@@ -134,6 +134,10 @@ func (s *Slice[M]) Insert(val M, at int) {
 	s.internal = append(s.internal[:at], last_part...)
 }
 
+func (s *Slice[M]) Extend(element_number int) {
+	s.internal = append(s.internal, make([]M, element_number)...)
+}
+
 func max(a int, b int) int {
 	if a > b {
 		return a
