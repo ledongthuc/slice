@@ -192,3 +192,10 @@ func TestPush(t *testing.T) {
 	list.Push(3)
 	require.Equalf(t, list.internal, []int{1, 2, 3}, "push 3")
 }
+
+func TestExpand(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.Expand(2, 4)
+	require.Equalf(t, list.internal, []int{1, 2, 0, 0, 0, 0, 3, 4, 5}, "expand from 2 with 4 elements")
+}

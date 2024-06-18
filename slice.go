@@ -124,6 +124,11 @@ func (s *Slice[M]) Push(element M) {
 	s.internal = append(s.internal, element)
 }
 
+func (s *Slice[M]) Expand(from_index int, element_number int) {
+	expanded_s := append(make([]M, element_number), s.internal[from_index:]...)
+	s.internal = append(s.internal[:from_index], expanded_s...)
+}
+
 func max(a int, b int) int {
 	if a > b {
 		return a
