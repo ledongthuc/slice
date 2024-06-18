@@ -161,7 +161,7 @@ func TestCutClean(t *testing.T) {
 
 func TestAppend(t *testing.T) {
 	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
-	dest_list := Slice[int]{[]int{6, 7, 8}}
+	dest_list := []int{6, 7, 8}
 
 	list.Append(dest_list)
 	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 6, 7, 8}, "append dest_list")
@@ -198,4 +198,11 @@ func TestExpand(t *testing.T) {
 
 	list.Expand(2, 4)
 	require.Equalf(t, list.internal, []int{1, 2, 0, 0, 0, 0, 3, 4, 5}, "expand from 2 with 4 elements")
+}
+
+func TestInsert(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.Insert(6, 2)
+	require.Equalf(t, list.internal, []int{1, 2, 6, 3, 4, 5}, "insert 2 at 4")
 }

@@ -102,8 +102,8 @@ func (s *Slice[M]) Cut(start int, end int) {
 	s.internal = append(s.internal[:start_index], s.internal[end_index:]...)
 }
 
-func (s *Slice[M]) Append(d Slice[M]) {
-	s.internal = append(s.internal, d.internal...)
+func (s *Slice[M]) Append(list []M) {
+	s.internal = append(s.internal, list...)
 }
 
 func (s *Slice[M]) Pop() M {
@@ -127,6 +127,11 @@ func (s *Slice[M]) Push(element M) {
 func (s *Slice[M]) Expand(from_index int, element_number int) {
 	expanded_s := append(make([]M, element_number), s.internal[from_index:]...)
 	s.internal = append(s.internal[:from_index], expanded_s...)
+}
+
+func (s *Slice[M]) Insert(val M, at int) {
+	last_part := append([]M{val}, s.internal[at:]...)
+	s.internal = append(s.internal[:at], last_part...)
 }
 
 func max(a int, b int) int {
