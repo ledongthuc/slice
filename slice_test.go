@@ -39,6 +39,34 @@ func TestDelete(t *testing.T) {
 	require.Equalf(t, list.internal, []int{2, 4}, "delete at index")
 }
 
+func TestDeleteUnordered(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5, 6}}
+
+	list.DeleteUnordered(-1)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 6}, "delete out of range from left")
+
+	list.DeleteUnordered(6)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 6}, "delete out of range from right")
+
+	last_val := &list.internal[len(list.internal)-1]
+	require.Equalf(t, *last_val, 6, "last element before deleting")
+	list.DeleteUnordered(0)
+	require.Equalf(t, list.internal, []int{6, 2, 3, 4, 5}, "delete at index 0")
+	require.Equalf(t, *last_val, 6, "last element after deleting")
+
+	last_val = &list.internal[len(list.internal)-1]
+	require.Equalf(t, *last_val, 5, "last element before deleting")
+	list.DeleteUnordered(len(list.internal) - 1)
+	require.Equalf(t, list.internal, []int{6, 2, 3, 4}, "delete at last element index")
+	require.Equalf(t, *last_val, 5, "last element after deleting")
+
+	last_val = &list.internal[len(list.internal)-1]
+	require.Equalf(t, *last_val, 4, "last element before deleting")
+	list.DeleteUnordered(1)
+	require.Equalf(t, list.internal, []int{6, 4, 3}, "delete at index")
+	require.Equalf(t, *last_val, 4, "last element after deleting")
+}
+
 func TestGetLength(t *testing.T) {
 	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
 	require.Equalf(t, list.GetLength(), 5, "get length of slice")
@@ -49,23 +77,60 @@ func TestGetRaw(t *testing.T) {
 	require.Equalf(t, list.GetRaw(), []int{1, 2, 3, 4, 5}, "get raw array of slice")
 }
 
-func TestDeleteGC(t *testing.T) {
+func TestDeleteClean(t *testing.T) {
 	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
 
-	list.DeleteGC(-1)
+	list.DeleteClean(-1)
 	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5}, "delete out of range from left")
 
-	list.DeleteGC(5)
+	list.DeleteClean(5)
 	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5}, "delete out of range from right")
 
-	list.DeleteGC(len(list.internal) - 1)
+	val := &list.internal[len(list.internal)-1]
+	require.Equalf(t, *val, 5, "last element before deleting")
+	list.DeleteClean(len(list.internal) - 1)
 	require.Equalf(t, list.internal, []int{1, 2, 3, 4}, "delete at last element index")
+	require.Equalf(t, *val, 0, "last element after deleting")
 
-	list.DeleteGC(0)
+	val = &list.internal[len(list.internal)-1]
+	require.Equalf(t, *val, 4, "last element before deleting")
+	list.DeleteClean(0)
 	require.Equalf(t, list.internal, []int{2, 3, 4}, "delete at index 0")
+	require.Equalf(t, *val, 0, "last element after deleting")
 
-	list.DeleteGC(1)
+	val = &list.internal[len(list.internal)-1]
+	require.Equalf(t, *val, 4, "last element before deleting")
+	list.DeleteClean(1)
 	require.Equalf(t, list.internal, []int{2, 4}, "delete at index")
+	require.Equalf(t, *val, 0, "last element after deleting")
+}
+
+func TestDeleteUnorderedClean(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5, 6}}
+
+	list.DeleteUnorderedClean(-1)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 6}, "delete out of range from left")
+
+	list.DeleteUnorderedClean(6)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 6}, "delete out of range from right")
+
+	last_val := &list.internal[len(list.internal)-1]
+	require.Equalf(t, *last_val, 6, "last element before deleting")
+	list.DeleteUnorderedClean(0)
+	require.Equalf(t, list.internal, []int{6, 2, 3, 4, 5}, "delete at index 0")
+	require.Equalf(t, *last_val, 0, "last element after deleting")
+
+	last_val = &list.internal[len(list.internal)-1]
+	require.Equalf(t, *last_val, 5, "last element before deleting")
+	list.DeleteUnorderedClean(len(list.internal) - 1)
+	require.Equalf(t, list.internal, []int{6, 2, 3, 4}, "delete at last element index")
+	require.Equalf(t, *last_val, 0, "last element after deleting")
+
+	last_val = &list.internal[len(list.internal)-1]
+	require.Equalf(t, *last_val, 4, "last element before deleting")
+	list.DeleteUnorderedClean(1)
+	require.Equalf(t, list.internal, []int{6, 4, 3}, "delete at index")
+	require.Equalf(t, *last_val, 0, "last element after deleting")
 }
 
 func TestCut(t *testing.T) {
@@ -81,7 +146,7 @@ func TestCut(t *testing.T) {
 	require.Equalf(t, list.internal, []int{1, 5}, "cut from valid range")
 }
 
-func TestCutGC(t *testing.T) {
+func TestCutClean(t *testing.T) {
 	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
 
 	list.Cut(-1, 0)
@@ -96,7 +161,7 @@ func TestCutGC(t *testing.T) {
 
 func TestAppend(t *testing.T) {
 	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
-	dest_list := Slice[int]{[]int{6, 7, 8}}
+	dest_list := []int{6, 7, 8}
 
 	list.Append(dest_list)
 	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 6, 7, 8}, "append dest_list")
@@ -126,4 +191,25 @@ func TestPush(t *testing.T) {
 
 	list.Push(3)
 	require.Equalf(t, list.internal, []int{1, 2, 3}, "push 3")
+}
+
+func TestExpand(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.Expand(2, 4)
+	require.Equalf(t, list.internal, []int{1, 2, 0, 0, 0, 0, 3, 4, 5}, "expand from 2 with 4 elements")
+}
+
+func TestInsert(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.Insert(6, 2)
+	require.Equalf(t, list.internal, []int{1, 2, 6, 3, 4, 5}, "insert 2 at 4")
+}
+
+func TestExtend(t *testing.T) {
+	list := Slice[int]{[]int{1, 2, 3, 4, 5}}
+
+	list.Extend(2)
+	require.Equalf(t, list.internal, []int{1, 2, 3, 4, 5, 0, 0}, "extend 2 elements")
 }

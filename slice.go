@@ -37,7 +37,7 @@ func (s *Slice[M]) Delete(index int) {
 	}
 }
 
-func (s *Slice[M]) DeleteGC(index int) {
+func (s *Slice[M]) DeleteClean(index int) {
 	length := len(s.internal)
 
 	if index < 0 || index >= length {
@@ -53,7 +53,29 @@ func (s *Slice[M]) DeleteGC(index int) {
 	s.internal = s.internal[:length-1]
 }
 
-func (s *Slice[M]) CutGC(start int, end int) {
+func (s *Slice[M]) DeleteUnordered(index int) {
+	length := len(s.internal)
+
+	if index < 0 || index >= length {
+		return
+	}
+
+	s.internal[index] = s.internal[length-1]
+	s.Delete(length - 1)
+}
+
+func (s *Slice[M]) DeleteUnorderedClean(index int) {
+	length := len(s.internal)
+
+	if index < 0 || index >= length {
+		return
+	}
+
+	s.internal[index] = s.internal[length-1]
+	s.DeleteClean(length - 1)
+}
+
+func (s *Slice[M]) CutClean(start int, end int) {
 	length := len(s.internal)
 	start_index := max(0, start)
 	end_index := min(length-1, max(start_index, end))
@@ -80,26 +102,40 @@ func (s *Slice[M]) Cut(start int, end int) {
 	s.internal = append(s.internal[:start_index], s.internal[end_index:]...)
 }
 
-func (s *Slice[M]) Append(d Slice[M]) {
-	s.internal = append(s.internal, d.internal...)
+func (s *Slice[M]) Append(list []M) {
+	s.internal = append(s.internal, list...)
 }
 
 func (s *Slice[M]) Pop() M {
 	x := s.internal[len(s.internal)-1]
-	s.DeleteGC(s.GetLength() - 1)
+	s.DeleteClean(s.GetLength() - 1)
 
 	return x
 }
 
 func (s *Slice[M]) Shift() M {
 	x := s.internal[0]
-	s.DeleteGC(0)
+	s.DeleteClean(0)
 
 	return x
 }
 
 func (s *Slice[M]) Push(element M) {
 	s.internal = append(s.internal, element)
+}
+
+func (s *Slice[M]) Expand(from_index int, element_number int) {
+	expanded_s := append(make([]M, element_number), s.internal[from_index:]...)
+	s.internal = append(s.internal[:from_index], expanded_s...)
+}
+
+func (s *Slice[M]) Insert(val M, at int) {
+	last_part := append([]M{val}, s.internal[at:]...)
+	s.internal = append(s.internal[:at], last_part...)
+}
+
+func (s *Slice[M]) Extend(element_number int) {
+	s.internal = append(s.internal, make([]M, element_number)...)
 }
 
 func max(a int, b int) int {
